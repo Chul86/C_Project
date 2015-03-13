@@ -68,7 +68,7 @@ void SetColor(int text, int background) // устанавливаем цвет
 
 void IniTarget(int p)
 {
-	SMarine->Target=S5[p].S;
+	SMarine->Target="Цель № "+p;
 }
 
 
@@ -234,23 +234,36 @@ void go(int p, int c)
 	else
 	if (p==1&&v==1&&m==3)
 			{
-				SMarine->StateTorpedo=1;
+				try
+				{
+					if (SMarine->Torpedo==0)
+						throw 1;
+					SMarine->StateTorpedo=1;
+				}
+				catch(int i)
+				{
+					system("cls");
+					cout<<Rus("Торпеды закончились. Зарядка невозможна.")<<endl<<endl;
+					system("pause");
+				}
 			}
 	else
 	if (p==2&&v==1&&m==3)
 			{
 				try
 				{
-					if (SMarine->StateTorpedo==0)
+					if (SMarine->StateTorpedo==0||SMarine->Target=="")
 						throw 1;
 					system("cls");
+					SMarine->Torpedo--;
+					SMarine->StateTorpedo=0;
 					cout<<Rus("Атака произведена")<<endl<<endl;
 					system("pause");
 				}
 				catch(int i)
 				{
 					system("cls");
-					cout<<Rus("Торпедный аппарат не заряжен. Атака невозможна.")<<endl<<endl;
+					cout<<Rus("Торпедный аппарат не заряжен или не выбрана цель. Атака невозможна.")<<endl<<endl;
 					system("pause");
 				}
 			}
@@ -290,6 +303,7 @@ void main()
 	SMarine->Consumption=2;
 	SMarine->State=0;
 	SMarine->StateTorpedo=0;
+	SMarine->Target="";
 	IniMenu();
 	while(true)
 	ShowMenu(S1,4);
